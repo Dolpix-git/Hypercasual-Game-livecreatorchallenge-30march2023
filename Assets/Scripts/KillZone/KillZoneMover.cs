@@ -6,8 +6,16 @@ public class KillZoneMover : MonoBehaviour{
     [SerializeField]
     private float camSpeed = 0.2f;
     private Vector3 camPos;
+    private Vector3 spawn;
+    private void Awake() {
+        GameManager.Instance.OnGameStart += Instance_OnGameStart;
+    }
     private void Start() {
-        camPos = transform.position;
+        camPos = spawn = transform.position;
+    }
+    private void Instance_OnGameStart() {
+        if (spawn == Vector3.zero) return;
+        transform.position = spawn;
     }
     void Update() {
         camPos.z = GameManager.Instance.CurrentYLevel - offset;

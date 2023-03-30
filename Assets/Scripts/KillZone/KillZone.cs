@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class KillZone : MonoBehaviour{
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("DEATH");
+        if (other.GetComponent<PlayerController>() == null) return;
+        if (!GameManager.Instance.IsGame) return;
+        GameManager.Instance.GameOver();
     }
 }

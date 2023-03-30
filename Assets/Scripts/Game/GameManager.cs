@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour{
@@ -25,9 +27,13 @@ public class GameManager : MonoBehaviour{
     private float pushDelta;
     private float lastPush = 0;
 
+    public bool IsGame;
+
+    public event Action OnGameStart;
+
     public GameObject Player { get => player; }
     public int CurrentYLevel { get => currentYLevel; set => currentYLevel = value; }
-
+    private Vector3 playerSpawn;
     private void Awake() {
         if (_instance != null && _instance != this) {
             Destroy(this);
@@ -35,12 +41,34 @@ public class GameManager : MonoBehaviour{
             _instance = this;
         }
     }
-
+    private void Start() {
+        playerSpawn = player.transform.position;
+        StartGame();
+    }
     private void Update() {
-        if (Time.time - lastPush > pushDelta) {
+        if (Time.time - lastPush > pushDelta && IsGame) {
             lastPush = Time.time;
             currentYLevel++;
             ChunkManager.Instance.UpdateChunks();
         }
+    }
+
+    public void GameOver() {
+        IsGame = false;
+        StartCoroutine(WaitToStart());
+    }
+    IEnumerator WaitToStart() {
+        yield return new WaitForSeconds(3);
+        RestartGame();
+    }
+    public void RestartGame() {
+        ChunkManager.Instance.ClearAllChunks();
+        player.transform.position = playerSpawn;
+        currentYLevel = 0;
+        StartGame();
+    }
+    public void StartGame() {
+        IsGame = true;
+        OnGameStart?.Invoke();
     }
 }

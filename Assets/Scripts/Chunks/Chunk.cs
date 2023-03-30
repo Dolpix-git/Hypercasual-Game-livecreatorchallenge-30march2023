@@ -3,7 +3,13 @@ using UnityEngine;
 public class Chunk{
     private TileType[] row;
     public GameObject[] visuals;
+    public GameObject carGen;
+    public GameObject carDestroy;
+
+    private int yVal;
+
     public Chunk(int rowLength, int y) {
+        yVal = y;
         row = new TileType[rowLength];
         GenerateRow();
 
@@ -11,10 +17,12 @@ public class Chunk{
         ChunkManager.Instance.GenerateChunkRow(row, y, out visuals);
     }
     void GenerateRow() {
-        if (Random.Range(0,10) < 3) {
+        if (yVal < 10) {
+            GenerateGrass();
+        }else if (Random.Range(0,10) < 3) {
             GenerateRoad();
         } else {
-            GenerateGrass();
+            GenerateForest();
         }
     }
 
@@ -22,8 +30,9 @@ public class Chunk{
         for (int i = 0; i < row.Length; i++) {
             row[i] = TileType.road;
         }
+        ChunkManager.Instance.GenerateCarRoad(out carGen,out carDestroy, yVal);
     }
-    void GenerateGrass() {
+    void GenerateForest() {
         for (int i = 0; i < row.Length; i++) {
             if (i == (int)(row.Length * 0.5f)) { 
                 row[i] = TileType.grass;
@@ -37,7 +46,11 @@ public class Chunk{
             }
         }
     }
-
+    void GenerateGrass() {
+        for (int i = 0; i < row.Length; i++) {
+            row[i] = TileType.grass;
+        }
+    }
     public bool CheckChunk(int x) {
         if (x < 0 || x >= row.Length) return false;
 

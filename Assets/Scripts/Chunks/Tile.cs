@@ -9,5 +9,7 @@ public class Tile{
 public enum TileType {
     grass,
     road,
-    grassTree
+    grassTree,
+    carGen,
+    carDestroy
 }

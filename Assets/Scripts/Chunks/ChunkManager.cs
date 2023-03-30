@@ -1,5 +1,6 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ChunkManager : MonoBehaviour{
@@ -54,12 +55,25 @@ public class ChunkManager : MonoBehaviour{
             for (int j = 0; j < chunks[chunksToDelete[i]].visuals.Length; j++) {
                 Destroy(chunks[chunksToDelete[i]].visuals[j]);
             }
+            if (chunks[chunksToDelete[i]].carGen is not null) Destroy(chunks[chunksToDelete[i]].carGen);
+            if (chunks[chunksToDelete[i]].carDestroy is not null) Destroy(chunks[chunksToDelete[i]].carDestroy);
             chunks.Remove(chunksToDelete[i]);
         }
 
         for (int i = highestChunk + 1; i <= GameManager.Instance.CurrentYLevel + chunkMaxDistance; i++) {
             GenerateChunks(chunkLength, i);
         }
+    }
+
+    public void ClearAllChunks() {
+        foreach (Chunk values in chunks.Values) {
+            for (int j = 0; j < values.visuals.Length; j++) {
+                Destroy(values.visuals[j]);
+            }
+            if (values.carGen is not null) Destroy(values.carGen);
+            if (values.carDestroy is not null) Destroy(values.carDestroy);
+        }
+        chunks = new Dictionary<int, Chunk>();
     }
 
     void GenerateChunks(int rowLength, int yVal) {
@@ -77,6 +91,18 @@ public class ChunkManager : MonoBehaviour{
         for (int x = 0; x < rows.Length; x++) {
             if (!prefabs.ContainsKey(rows[x])) continue;
             visuals[x] = Instantiate(prefabs[rows[x]].prefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+        }
+    }
+    public void GenerateCarRoad(out GameObject gen, out GameObject destroy, int y) {
+        float direction = Mathf.Sign(Random.Range(-1, 2));
+        if (direction > 0) {
+            gen = Instantiate(prefabs[TileType.carGen].prefab, new Vector3(0,1,y),Quaternion.identity);
+            gen.GetComponent<CarGenerator>().direction = direction;
+            destroy = Instantiate(prefabs[TileType.carDestroy].prefab, new Vector3(chunkLength, 1,y),Quaternion.identity);
+        } else {
+            gen = Instantiate(prefabs[TileType.carGen].prefab, new Vector3(chunkLength, 1, y), Quaternion.identity);
+            gen.GetComponent<CarGenerator>().direction = direction;
+            destroy = Instantiate(prefabs[TileType.carDestroy].prefab, new Vector3(0, 1, y), Quaternion.identity);
         }
     }
 }

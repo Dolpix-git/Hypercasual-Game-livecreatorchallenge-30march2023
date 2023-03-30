@@ -228,7 +228,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -421,6 +420,16 @@ MonoBehaviour:
   chunkMinDistance: 40
   prefabs:
     _serializedList:
+    - Key: 3
+      Value:
+        prefab: {fileID: 4822128321843347166, guid: d6f34f324a063fe429b8310a2216a7a5,
+          type: 3}
+        walkable: 1
+    - Key: 4
+      Value:
+        prefab: {fileID: 9131345505036065536, guid: 2e52beca16bf3a545828d3f4647a1017,
+          type: 3}
+        walkable: 1
     - Key: 0
       Value:
         prefab: {fileID: 1211149421741749434, guid: 8e082b21fd3cb5246b13d40965e1f7d9,
@@ -450,6 +459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1593060996}
   pushDelta: 1
+  IsGame: 0
 --- !u!1 &939448955
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,8 +471,6 @@ GameObject:
   - component: {fileID: 939448956}
   - component: {fileID: 939448959}
   - component: {fileID: 939448958}
-  - component: {fileID: 939448957}
-  - component: {fileID: 939448960}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -485,19 +493,6 @@ Transform:
   m_Father: {fileID: 1593060998}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &939448957
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939448955}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &939448958
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -548,22 +543,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939448955}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &939448960
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939448955}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
 --- !u!1 &1360226210
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +571,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360226210}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -656,7 +635,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360226210}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 1, z: -10}
+  m_LocalPosition: {x: 7, y: 1, z: -10}
   m_LocalScale: {x: 20, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -699,6 +678,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1593060998}
   - component: {fileID: 1593060997}
+  - component: {fileID: 1593061000}
+  - component: {fileID: 1593060999}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -728,13 +709,42 @@ Transform:
   m_GameObject: {fileID: 1593060996}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5, y: 1, z: 2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 1.4, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 939448956}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1593060999
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593060996}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1593061000
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593060996}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &1691333857
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour{
     }
 
     private void MoveCharacter(Vector3 vect) {
+        if (!GameManager.Instance.IsGame) return;
         lastMove = Time.time;
         Vector3 newVect = transform.position + vect;
         if (ChunkManager.Instance.CheckPosition((int)newVect.x, (int)newVect.z)) transform.position = newVect;

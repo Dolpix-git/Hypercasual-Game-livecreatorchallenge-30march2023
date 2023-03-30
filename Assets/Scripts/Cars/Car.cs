@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Car : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class Car : MonoBehaviour {
+
+    public float speed;    
+    public float direction;
+    public CarGenerator generator;
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update(){
+        transform.position += new Vector3(speed * direction, 0, 0) * Time.deltaTime;
+    }
+
+    public void DestroyCar() {
+        generator.DestroyCar(gameObject);
     }
 }
