@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour{
                 MoveCharacter(new Vector3(0, 0, CharacterInputManager.Instance.Movement.y).normalized);
             }
         }
+        if (transform.position.z > GameManager.Instance.score) {
+            GameManager.Instance.ChangeScore((int)transform.position.z);
+        }
     }
 
     private void Instance_OnRight() {

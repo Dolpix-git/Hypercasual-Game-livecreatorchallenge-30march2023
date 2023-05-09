@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Chunk{
     private TileType[] row;
-    public GameObject[] visuals;
+    public GameObject visual;
     public GameObject carGen;
     public GameObject carDestroy;
 
@@ -13,8 +13,7 @@ public class Chunk{
         row = new TileType[rowLength];
         GenerateRow();
 
-
-        ChunkManager.Instance.GenerateChunkRow(row, y, out visuals);
+        ChunkManager.Instance.GenerateChunkRow(row, y, out visual);
     }
     void GenerateRow() {
         if (yVal < 10) {

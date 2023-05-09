@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour{
     private GameObject player;
     private int currentYLevel = 0;
 
+    public int score = 0;
+
     [SerializeField]
     private float pushDelta;
     private float lastPush = 0;
@@ -30,6 +32,8 @@ public class GameManager : MonoBehaviour{
     public bool IsGame;
 
     public event Action OnGameStart;
+    public event Action OnGameEnd;
+    public event Action<int> OnScoreChange;
 
     public GameObject Player { get => player; }
     public int CurrentYLevel { get => currentYLevel; set => currentYLevel = value; }
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour{
     public void GameOver() {
         IsGame = false;
         StartCoroutine(WaitToStart());
+        OnGameEnd?.Invoke();
     }
     IEnumerator WaitToStart() {
         yield return new WaitForSeconds(3);
@@ -65,10 +70,15 @@ public class GameManager : MonoBehaviour{
         ChunkManager.Instance.ClearAllChunks();
         player.transform.position = playerSpawn;
         currentYLevel = 0;
+        score = 0;
         StartGame();
     }
     public void StartGame() {
         IsGame = true;
         OnGameStart?.Invoke();
+    }
+    public void ChangeScore(int amount) {
+        score = amount;
+        OnScoreChange?.Invoke(amount);
     }
 }

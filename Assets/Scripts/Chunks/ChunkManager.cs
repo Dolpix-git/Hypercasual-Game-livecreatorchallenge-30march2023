@@ -1,6 +1,5 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class ChunkManager : MonoBehaviour{
@@ -52,9 +51,7 @@ public class ChunkManager : MonoBehaviour{
         }
 
         for (int i = 0; i < chunksToDelete.Count; i++) {
-            for (int j = 0; j < chunks[chunksToDelete[i]].visuals.Length; j++) {
-                Destroy(chunks[chunksToDelete[i]].visuals[j]);
-            }
+            if (chunks[chunksToDelete[i]].visual is not null) Destroy(chunks[chunksToDelete[i]].visual);
             if (chunks[chunksToDelete[i]].carGen is not null) Destroy(chunks[chunksToDelete[i]].carGen);
             if (chunks[chunksToDelete[i]].carDestroy is not null) Destroy(chunks[chunksToDelete[i]].carDestroy);
             chunks.Remove(chunksToDelete[i]);
@@ -67,9 +64,7 @@ public class ChunkManager : MonoBehaviour{
 
     public void ClearAllChunks() {
         foreach (Chunk values in chunks.Values) {
-            for (int j = 0; j < values.visuals.Length; j++) {
-                Destroy(values.visuals[j]);
-            }
+            if (values.visual is not null) Destroy(values.visual);
             if (values.carGen is not null) Destroy(values.carGen);
             if (values.carDestroy is not null) Destroy(values.carDestroy);
         }
@@ -86,12 +81,39 @@ public class ChunkManager : MonoBehaviour{
         return chunks[y].CheckChunk(x);
     }
 
-    public void GenerateChunkRow(TileType[] rows, int y, out GameObject[] visuals) {
-        visuals = new GameObject[rows.Length];
-        for (int x = 0; x < rows.Length; x++) {
-            if (!prefabs.ContainsKey(rows[x])) continue;
-            visuals[x] = Instantiate(prefabs[rows[x]].prefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+    public void GenerateChunkRow(TileType[] rows, int y, out GameObject visual) {
+        visual = Instantiate(new GameObject(), new Vector3(0, 0, y), Quaternion.identity, transform);
+
+        //for (int x = 0; x < rows.Length; x++) {
+        //    if (!prefabs.ContainsKey(rows[x])) continue;
+        //    visuals[x] = Instantiate(prefabs[rows[x]].prefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+        //}
+
+
+
+        MeshFilter[] meshFilters = new MeshFilter[rows.Length];
+        for (int i = 0; i < rows.Length; i++) {
+            meshFilters[i] = prefabs[rows[i]].prefab.GetComponent<MeshFilter>();
         }
+
+        CombineInstance[] combineInstances = new CombineInstance[meshFilters.Length];
+        for (int x = 0; x < meshFilters.Length; x++) {
+            combineInstances[x].mesh = meshFilters[x].sharedMesh;
+            var matrix = visual.transform.localToWorldMatrix;
+            matrix[0, 3] = x;
+            matrix[1, 3] = 0;
+            matrix[2, 3] = 0;
+            combineInstances[x].transform = matrix;
+        }
+
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combineInstances);
+
+        MeshFilter combinedMeshFilter = visual.AddComponent<MeshFilter>();
+        combinedMeshFilter.mesh = combinedMesh;
+
+        MeshRenderer combinedMeshRenderer = visual.AddComponent<MeshRenderer>();
+        combinedMeshRenderer.material = prefabs[rows[0]].prefab.GetComponent<MeshRenderer>().sharedMaterial;
     }
     public void GenerateCarRoad(out GameObject gen, out GameObject destroy, int y) {
         float direction = Mathf.Sign(Random.Range(-1, 2));

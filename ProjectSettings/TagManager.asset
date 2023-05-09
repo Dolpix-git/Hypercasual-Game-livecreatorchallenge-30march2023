@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Killing Layer
   - Water
   - UI
-  - 
-  - 
+  - PlayerLayer
+  - CarLayer
   - 
   - 
   - 
