@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour{
     private float moveDelta = 0.5f;
     private float lastMove;
 
+    [SerializeField] private GameObject visual;
+
     private void Awake() {
         CharacterInputManager.Instance.OnUp += Instance_OnUp;
         CharacterInputManager.Instance.OnDown += Instance_OnDown;
@@ -53,6 +55,10 @@ public class PlayerController : MonoBehaviour{
         if (!GameManager.Instance.IsGame) return;
         lastMove = Time.time;
         Vector3 newVect = transform.position + vect;
-        if (ChunkManager.Instance.CheckPosition((int)newVect.x, (int)newVect.z)) transform.position = newVect;
+        if (ChunkManager.Instance.CheckPosition((int)newVect.x, (int)newVect.z)) {
+
+            visual.transform.rotation = Quaternion.LookRotation(transform.position - newVect, Vector3.up);
+            transform.position = newVect;
+        }
     }
 }

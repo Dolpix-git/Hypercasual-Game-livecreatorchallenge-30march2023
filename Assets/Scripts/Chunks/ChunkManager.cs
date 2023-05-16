@@ -1,6 +1,7 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class ChunkManager : MonoBehaviour{
     #region Singleton Pattern
@@ -23,7 +24,7 @@ public class ChunkManager : MonoBehaviour{
     private int chunkLength, chunkMaxDistance, chunkMinDistance;
 
     [SerializedDictionary("ID", "GameObject")]
-    public SerializedDictionary<TileType, Tile> prefabs;
+    public AYellowpaper.SerializedCollections.SerializedDictionary<TileType, Tile> prefabs;
     private Dictionary<int, Chunk> chunks = new Dictionary<int, Chunk>();
 
     
@@ -114,6 +115,9 @@ public class ChunkManager : MonoBehaviour{
 
         MeshRenderer combinedMeshRenderer = visual.AddComponent<MeshRenderer>();
         combinedMeshRenderer.material = prefabs[rows[0]].prefab.GetComponent<MeshRenderer>().sharedMaterial;
+        combinedMeshRenderer.shadowCastingMode = ShadowCastingMode.On;
+        combinedMeshRenderer.receiveShadows = true;
+
     }
     public void GenerateCarRoad(out GameObject gen, out GameObject destroy, int y) {
         float direction = Mathf.Sign(Random.Range(-1, 2));
